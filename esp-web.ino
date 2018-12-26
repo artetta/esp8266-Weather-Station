@@ -29,32 +29,12 @@ int Pressure[CHART_SIZE];
 const char* ssid = "ssid";
 const char* password = "password";
 
-void processCSVTemperature()
+void processCSV(int *data)
 {      
     String str = "[\n";
     for (int i=0; i<=cur_pos; i++) {
       if ((i>0)&&(String(co2t[i])!="0")) str +=",\n";
-      if (String(co2t[i])!="0") str += "["+String(co2t[i])+"000,"+String(Temperature[i])+"]";}
-      str +="\n]";
-    server.send ( 200, "application/json", str);  
-}
-
-void processCSVPressure()
-{      
-    String str = "[\n";
-    for (int i=0; i<=cur_pos; i++) {
-      if ((i>0)&&(String(co2t[i])!="0")) str +=",\n";
-      if (String(co2t[i])!="0") str += "["+String(co2t[i])+"000,"+String(Pressure[i])+"]";}
-      str +="\n]";
-    server.send ( 200, "application/json", str);  
-}
-
-void processCSVHumidity()
-{      
-    String str = "[\n";
-    for (int i=0; i<=cur_pos; i++) {
-      if ((i>0)&&(String(co2t[i])!="0")) str +=",\n";
-      if (String(co2t[i])!="0") str += "["+String(co2t[i])+"000,"+String(Humidity[i])+"]";}
+      if (String(co2t[i])!="0") str += "["+String(co2t[i])+"000,"+String(data[i])+"]";}
       str +="\n]";
     server.send ( 200, "application/json", str);  
 }
@@ -64,9 +44,9 @@ void ServerInit() {
   server.on ( "/temperature.html", []() { server.send ( 200, "text/html", PAGE_temperature ); });
   server.on ( "/pressure.html", []() { server.send ( 200, "text/html", PAGE_pressure ); });
   server.on ( "/humidity.html", []() { server.send ( 200, "text/html", PAGE_humidity ); });
-  server.on ( "/temperature.json", processCSVTemperature  );
-  server.on ( "/pressure.json", processCSVPressure  );
-  server.on ( "/humidity.json", processCSVHumidity  );
+  server.on ( "/temperature.json", []() { processCSV(Temperature); });
+  server.on ( "/pressure.json", []() { processCSV(Pressure); });
+  server.on ( "/humidity.json", []() { processCSV(Humidity); });
      server.onNotFound ( []() { server.send ( 400, "text/html", "Page not Found" );   }  );
     server.begin();
 }
