@@ -5,7 +5,7 @@
 #include <time.h>
 #include "index.h"
 
-#define CHART_SIZE 144
+#define CHART_SIZE 72
 #define BME280_ADDRESS 0x76
 Adafruit_BME280 bme;
  
